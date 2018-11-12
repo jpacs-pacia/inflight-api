@@ -1,0 +1,35 @@
+{
+  "name": "hrlgc-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "hbs": "~4.0.1",
+    "isnumeric": "^0.3.3",
+    "isset": "^1.0.4",
+    "md5": "^2.2.1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.0.11",
+    "morgan": "~1.8.1",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
+    "nodemon": "^1.18.4",
+    "npm": "^6.1.0",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.0",
+    "serve-favicon": "~2.4.2",
+    "socket.io": "^2.1.0",
+    "sprintf-js": "^1.1.1",
+    "sqlite3": "^4.0.1",
+    "swagger-ui-express": "^3.0.10",
+    "tedious": "^2.6.1",
+    "uniqid": "^5.0.3"
+  }
+}

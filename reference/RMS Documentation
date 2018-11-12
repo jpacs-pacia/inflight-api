@@ -1,0 +1,12 @@
+DOCUMENTATION
+
+PROJECT: Recruitment Mangement System API
+VERSION: 1.2
+
+Checkout:
+
+git checkout lgcapi-rms
+
+Merge on master
+git checkout master
+git merge lgcapi-rms
