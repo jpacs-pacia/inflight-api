@@ -25,6 +25,7 @@ sequelize
 					callback(null, result);
 				});
 		}
+		/**** MOVIES ****/
 	    global.seqObj.movies_table = sequelize.define('movies', 
 	    	{
 	    		
@@ -44,8 +45,54 @@ sequelize
 	    	}, 
 	    	{freezeTableName: true},
 	    	{timestamps: false}
-	    	);
-	    
+	    );
+
+	    /**** USER ACTIVITY LOGS ****/
+
+	    global.seqObj.user_activity_logs_table = sequelize.define('user_activity_logs', 
+	    	{		
+	    		'user_id': {type:Sequelize.INTEGER},
+	    		'user_types': {type: Sequelize.STRING},
+	            'transaction_type_id': {type:Sequelize.INTEGER},
+	            'transaction_type_code': {type:Sequelize.STRING},
+	            'date_accessed': {type:Sequelize.DATE},
+	            'description': {type:Sequelize.STRING}
+	    	}, 
+	    	{freezeTableName: true},
+	    	{timestamps: false}
+	    );
+
+	    /*** SAPPHIRE USER - APPLICATION USERS ***/
+	    global.seqObj.appusers_table = sequelize.define('appusers', 
+	    	{		
+	    		'firstname': {type:Sequelize.STRING},
+	    		'lastname': {type: Sequelize.STRING},
+	            'email': {type:Sequelize.STRING},
+	            'password': {type:Sequelize.STRING}
+	    	}, 
+	    	{freezeTableName: true},
+	    	{timestamps: false}
+	    );
+
+	    /*** SAPPHIRE USER - SHOP USERS  ***/
+	    global.seqObj.shopusers_table = sequelize.define('shopusers', 
+	    	{		
+	    		'firstname': {type:Sequelize.STRING},
+	    		'lastname': {type: Sequelize.STRING},
+	            'email': {type:Sequelize.STRING},
+	            'ewallet': {type:Sequelize.DOUBLE},
+	            'tokens': {type:Sequelize.DOUBLE},
+	            'contactno': {type:Sequelize.BIGINT},
+	            'password': {type:Sequelize.STRING}
+
+	    	}, 
+	    	{freezeTableName: true},
+	    	{timestamps: false}
+	    );
+	    global.seqObj.user_activity_logs_table.belongsTo(global.seqObj.shopusers_table, {foreignKey:'user_id',constraints:false});
+	    global.seqObj.shopusers_table.hasMany(global.seqObj.user_activity_logs_table);
+	   
+	    // global.seqObj.user_activity_logs_table.belongsTo()
 	    // global.seqObj.applicants_job_table.belongsTo(global.seqObj.applicants_table, {foreignKey: 'ApplicantNumber',constraints: false});
 	    // global.seqObj.applicants_table.belongsToMany(global.seqObj.applicants_job_table, {through: 'applicantjob', foreignKey: 'ApplicantNumber',timestamps: false})
 	    global.seqObj.status = 'CONNECTED';

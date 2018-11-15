@@ -1,3 +1,5 @@
+
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -15,6 +17,13 @@ var controller_files = [];
 var controller_obj = {};
 var app = express();
 
+/*** SETTINGS ***/
+global.appConfiguration = {
+    'app_directory': path.resolve(__dirname),
+    'app_model_directory': path.resolve(__dirname + '/models'),
+    'app_sapphire_model_directory': path.resolve(__dirname + '/models/sapphire'),
+    'app_configuration_directory': path.resolve(__dirname + '/models/config'),
+};
 // // socket.io set
 // var server = require('http').Server(app);
 // var io = require('socket.io')(server);
@@ -57,13 +66,17 @@ fs.readdirSync('./controllers').forEach(function (file) {
        app.use('/' + controller_files[0], controller_obj);
   }
 });
-
+console.log('DIR NAME: ');
+console.log(__dirname);
+console.log('LOADING SAPPHIRE CONTROLLERS: ');
 fs.readdirSync('./controllers/sapphire').forEach(function (file) {
   controller_files = file.split('.');
   if(file.substr(-3) == '.js') {
       var controller_obj = require('./controllers/sapphire/' + controller_files[0]);
       // route.controller(app);
        app.use('/' + controller_files[0], controller_obj);
+       
+       console.log(controller_files[0]);
   }
 });
 
