@@ -2,23 +2,28 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Recruitment Management System API V1.0",
-    "description": "Yet Another Node.js Blogg Application API",
+    "title": "Inflight App API V1.0",
+    "description": "Inflight api which stores statistics and communicate with inflight backend.",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
   "host": "localhost:3000",
-  "basePath": "/api/v1",
+  "basePath": "/",
   "tags": [
     {
       "name": "Users",
       "description": "API for users in the system"
+    },
+    {
+      "name": "Users Activity Logs",
+      "description": "User history logs on inflight system"
     }
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -27,7 +32,27 @@
     "application/json"
   ],
   "paths": {
-    "/users": {
+    "/user_activity_logs": {
+      "get": {
+        "tags": [
+          "Users Activity Logs"
+        ],
+        "description": "Get all user activity logs",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All user activity logs are shown",
+            "schema": {
+              "$ref": "#/definitions/Users_Logs"
+            }
+          }
+        }
+      }
+    },
+    "/movies": {
       "post": {
         "tags": [
           "Users"
@@ -157,7 +182,18 @@
         }
       }
     },
-    "Users": {
+    "Users_Logs": {
+      "required":[],
+      "properties": {
+        "result": {
+          "type": "string"
+        },
+        "details": {
+          "type": "string"
+        }
+      }
+    },
+    "Users_Logs2": {
       "type": "array",
       "$ref": "#/definitions/User"
     }
