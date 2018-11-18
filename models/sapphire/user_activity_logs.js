@@ -34,20 +34,49 @@ var activity_logs = {
             .findAll({
                 attributes: stables.user_activity_logs.fields,
                 //group: 'ApplicantNumber',
-                raw: true,
+                // raw: true,
                 include: [
                     {
-                        model: global.seqObj.shopusers_table
+                        model: global.seqObj.shopusers_table,
+                        attributes: ['firstname','lastname'],
+                        nested: false
                     }
                 ]
             })
             .then(userLogsInformation=>{
-                callback(null, userLogsInformation);
+                
+                // var key;
+                // for(key in userLogsInformation)
+                // {
+
+                //     userLogsInformation[key]['first_name'] = userLogsInformation[key].shopuser.firstname;
+                //     console.log(userLogsInformation[key].user_activity_logs);
+                // }
+                // console.log(userLogsInformation);
+                var result = {
+                                    'result': 'OK',
+                                    'details': userLogsInformation
+                                };
+                callback(null, result);
             });
 
     },
     create: function(parameters, callback) {
-
+            var params = parameters;
+            params.date_accessed = moment().format('YYYY-MM-DD HH:MM:SS');
+            global
+                .seqObj
+                .user_activity_logs_table
+                .create(params)
+                .then(createWorkExperience=>{
+            
+                    var result = {
+                                    'result': 'OK',
+                                    'details': createWorkExperience
+                                };
+                    callback(null, result);   
+                });
+            
     }
 };
 
