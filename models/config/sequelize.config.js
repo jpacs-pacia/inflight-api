@@ -89,6 +89,21 @@ sequelize
 	    	{freezeTableName: true},
 	    	{timestamps: false}
 	    );
+
+	    /*** SAPPHIRE USER - SHOP USERS  ***/
+	    global.seqObj.session_holders_table = sequelize.define('session_holders', 
+	    	{		
+	    		'user_name': {type:Sequelize.STRING},
+	    		'session_identifier': {type: Sequelize.STRING},
+	            'date_time_accessed': {type:Sequelize.DATE},
+	            'date_time_last_accessed': {type:Sequelize.DATE},
+	            'ip_address': {type:Sequelize.STRING},
+	            'user_types': {type:Sequelize.STRING}
+	    	}, 
+	    	{freezeTableName: true},
+	    	{timestamps: false}
+	    );
+
 	    global.seqObj.user_activity_logs_table.belongsTo(global.seqObj.shopusers_table, {foreignKey:'user_id',constraints:false});
 	    global.seqObj.shopusers_table.hasMany(global.seqObj.user_activity_logs_table);
 	   

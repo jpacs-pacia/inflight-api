@@ -8,9 +8,10 @@ var isset = require('isset');
 var moment = require('moment');
 var sprintf = require("sprintf-js").sprintf;
 var vsprintf = require("sprintf-js").vsprintf;
+var md5 = require('md5');
 
 /** REST METHODS **/
-var activity_logs = {
+var session_manager = {
     read: function(parameters, callback) {
         global
             .seqObj
@@ -61,6 +62,42 @@ var activity_logs = {
                     callback(null, result);   
                 });
             
+    },
+    login: function(parameters, callback) {
+            var params = parameters;
+            params.date_accessed = moment().format('YYYY-MM-DD HH:MM:SS');
+            global
+                .seqObj
+                .shopusers_table
+                .findAll({
+                    attributes: ['firstname', 'lastname', ['email','email_address']],
+                    //group: 'ApplicantNumber',
+                    raw: true,
+                    where: {
+                        email: parameters.user_name,
+                        password: md5(parameters.password)
+                    }
+                })
+                .then(accountInformation=>{
+                    var session_identifier = 'TEMP';
+                    var result = {
+                        'result': 'ERROR',
+                        'details':'INVALID_CREDENTIALS',
+                        'session_identifier': 'NONE'
+                    };
+                    
+                    if(Object.keys(accountInformation).length > 0)
+                    {
+                        result.result = 'OK';
+                        result.details = 'VALID_CREDENTIALS';
+                        result.session_identifier = session_identifier;
+                        result.account_information = accountInformation;
+                    }
+
+                    callback(null, result);
+                    
+                });
+            
     }
 };
 
@@ -71,13 +108,15 @@ var nactivity_logs = {
 };
 
 exports_setup = {
-                    'create': activity_logs.create,
-                    'read': activity_logs.read,
+                    'create': session_manager.create,
+                    'read': session_manager.read,
+
                     // 'update': update,
                     // 'delete': deletes,
                     //'application': jobs.application,
                     //'job_details': jobs.details
                     /*** EXTRA METHDOS ***/
+                    'login': session_manager.login
 
                 };
 module.exports = exports_setup;

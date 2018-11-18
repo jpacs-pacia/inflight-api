@@ -19,6 +19,7 @@ var appusers_table =  {
 							'sort':
 								[['email', 'ASC']]
 };
+
 var tables = {
 				'movies': movies_table, 
 				'user_activity_logs': user_activity_logs_table, 
