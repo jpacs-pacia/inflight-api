@@ -48,7 +48,7 @@ var session_manager = {
     },
     create: function(parameters, callback) {
             var params = parameters;
-            params.date_accessed = moment().format('YYYY-MM-DD HH:MM:SS');
+            params.date_accessed = moment().format('YYYY-MM-DD hh:mm:ss');
             global
                 .seqObj
                 .session_holders_table
@@ -63,9 +63,26 @@ var session_manager = {
                 });
             
     },
+    update: function(parameters, callback) {
+            var params = parameters;
+            params.date_accessed = moment().format('YYYY-MM-DD hh:mm:ss');
+            global
+                .seqObj
+                .session_holders_table
+                .update({'date_time_last_accessed': params.date_accessed, 'session_identifier': params.new_session_identifier}, {where: {'session_identifier': parameters.session_identifier}})
+                .then(updateSession=>{
+            
+                    var result = {
+                                    'result': 'OK',
+                                    'details': updateSession
+                                };
+                    callback(null, result);   
+                });
+            
+    },
     login: function(parameters, callback) {
             var params = parameters;
-            params.date_accessed = moment().format('YYYY-MM-DD HH:MM:SS');
+            params.date_accessed = moment().format('YYYY-MM-DD hh:mm:ss');
             
             global
                 .seqObj
@@ -89,40 +106,60 @@ var session_manager = {
                     
                     if(Object.keys(accountInformation).length > 0)
                     {
-                        var session_identifier = md5(uniqid()) + '-' + md5(accountInformation[0].password);
-                        result.result = 'OK';
-                        result.details = 'VALID_CREDENTIALS';
-                        result.session_identifier = session_identifier;
-                        result.account_information = {
-                                                        'firstname': accountInformation[0].firstname,
-                                                        'lastname': accountInformation[0].lastname,
-                                                        'email_address': accountInformation[0].email_address
-                                                    };
-                        result.session_data = {
-                            'user_name': accountInformation[0].email_address,
-                            'session_identifier': session_identifier,
-                            'date_time_accessed': moment().format('YYYY-MM-DD hh:mm:ss'),
-                            'date_time_last_accessed': moment().format('YYYY-MM-DD hh:mm:ss'),
-                            'flight_number': 'AA-00001',
-                            'user_types': 'INFLIGHTAPP',
-                            'ip_address': parameters.ip_address
-                        };
-                        // this.create(result.session_data, function(err, resultSession) {
-                        //     console.log(resultSession);
 
-                        // })
-                        
-                        
                         var validate_parameters = {
                             'user_name': parameters.user_name,
-                            'session_identifier': '3bd753606d28fc86e8b105bf74c0b1f7-387e458b533b9302c59b295fcb5403bc'
+                            'session_identifier': 'NONE'
                         };
-                        result.validate_session = session_manager.validate_session_id(validate_parameters, function(err, resultValidate){
+                        session_manager.check_user_log(validate_parameters, function(err, resultValidate){
                             console.log(resultValidate);
+                            console.log(resultValidate.result == 'OK');
+                            var session_identifier = md5(uniqid()) + '-' + md5(accountInformation[0].password);
+                            if(resultValidate.result == 'OK')
+                            {
+                                result.result = 'OK';
+                                result.details = 'VALID_CREDENTIALS';
+                                result.session_identifier = session_identifier;
+                                result.account_information = {
+                                                                'firstname': accountInformation[0].firstname,
+                                                                'lastname': accountInformation[0].lastname,
+                                                                'email_address': accountInformation[0].email_address
+                                                            };
+                                result.session_data = {
+                                    'user_name': accountInformation[0].email_address,
+                                    'session_identifier': session_identifier,
+                                    'date_time_accessed': moment().format('YYYY-MM-DD hh:mm:ss'),
+                                    'date_time_last_accessed': moment().format('YYYY-MM-DD hh:mm:ss'),
+                                    'flight_number': 'AA-00001',
+                                    'user_types': 'INFLIGHTAPP',
+                                    'ip_address': parameters.ip_address
+                                };
+
+                                session_manager.create(result.session_data, function(err, resultSession) {
+                                    console.log(resultSession);
+                                    callback(null, result);
+
+                                });
+                            } else {
+                                result.session_identifier = resultValidate.session_identifier;
+                                result.new_session_identifier = session_identifier;
+                                session_manager.update(result, function(err, resultSession) {
+                                    result = resultValidate;
+                                    callback(null, result);
+                                })
+                                
+                            }
+
+                            
                         });
+                        
+                        
+                        
+                        
+                        
                     }   
 
-                    callback(null, result);
+                    
                     
                 });
             
@@ -157,6 +194,41 @@ var session_manager = {
                     else
                     {
                        validate_result = {'result': 'ERROR', 'details': 'INVALID SESSION'};
+                    }
+                    callback(null, validate_result);
+                });
+    },
+    check_user_log: function(parameters, callback) {
+        var session_time_span = moment().subtract(30, 'minutes');
+        session_time_span = moment(session_time_span).format('YYYY-MM-DD hh:mm:ss');
+        global
+                .seqObj
+                .session_holders_table
+                .findAll({
+                    attributes: ['user_name', 'session_identifier', ['updatedAt', 'last_accessed']],
+                    //group: 'ApplicantNumber',
+                    raw: true,
+                    where: {
+                        'user_name': parameters.user_name,
+                        'updatedAt': {
+                            [global.Op.gte]: session_time_span
+                        }
+                        
+                    },
+                    limit: 1,
+                    order: [['id', 'DESC']]
+                })
+                .then(validateSession=>{
+                    var validate_result;
+                    var total_difference = moment().format('YYYY-MM-DD hh:mm:ss');
+                    total_difference = moment(total_difference);
+                    if(Object.keys(validateSession).length>0)
+                    {   
+                        validate_result = {'result': 'ERROR', 'details': 'User is currently log in', 'session_identifier': validateSession[0].session_identifier};
+                    }
+                    else
+                    {
+                       validate_result = {'result': 'OK', 'details': 'User available'};
                     }
                     callback(null, validate_result);
                 });
