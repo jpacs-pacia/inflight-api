@@ -25,6 +25,7 @@ router
     var obj = req.body;
 
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    obj.ip_address = req.connection.remoteAddress;
     obj.url_link = fullUrl;
 	sessionModel.login(obj, function(err, result){
 		res.setHeader('Access-Control-Allow-Origin', '*');

@@ -4,7 +4,7 @@
 global.seqObj = {'status': 'PENDING'};
 
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('inflightapp', 'root', 'laussales', {
+var sequelize = new Sequelize('inflightapp', 'root', 'l0c4lh0st', {
   dialect: 'mysql',
   host: '127.0.0.1',
   port: '3306',
@@ -98,7 +98,8 @@ sequelize
 	            'date_time_accessed': {type:Sequelize.DATE},
 	            'date_time_last_accessed': {type:Sequelize.DATE},
 	            'ip_address': {type:Sequelize.STRING},
-	            'user_types': {type:Sequelize.STRING}
+	            'user_types': {type:Sequelize.STRING},
+	            'flight_number': {type:Sequelize.STRING}
 	    	}, 
 	    	{freezeTableName: true},
 	    	{timestamps: false}
