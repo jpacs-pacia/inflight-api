@@ -7,7 +7,7 @@ var movies_table = {		'fields':
 
 var user_activity_logs_table = {
 							'fields': 
-								['user_id','user_types','transaction_type_id','transaction_type_code','date_accessed','description'],
+								['user_id','user_types','transaction_type_id','transaction_type_code','date_accessed','description', 'flight_number'],
 							'sort':
 								[['description', 'ASC']]
 

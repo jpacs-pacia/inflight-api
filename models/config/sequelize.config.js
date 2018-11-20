@@ -56,7 +56,8 @@ sequelize
 	            'transaction_type_id': {type:Sequelize.INTEGER},
 	            'transaction_type_code': {type:Sequelize.STRING},
 	            'date_accessed': {type:Sequelize.DATE},
-	            'description': {type:Sequelize.STRING}
+	            'description': {type:Sequelize.STRING},
+	            'flight_number': {type:Sequelize.STRING}
 	    	}, 
 	    	{freezeTableName: true},
 	    	{timestamps: false}

@@ -18,9 +18,21 @@ router
 	    	res.send(result);
 	 	});	
 	})
-	.get('/watched/:flight_number', function(req, res, next) {
+	.get('/watched/flight/:flight_number', function(req, res, next) {
 		var parseData = url.parse(req.url, true);
-	 	moviesModel.watched(parseData.query, function(err, result){
+	 	moviesModel.watched_per_flight(parseData.query, function(err, result){
+
+	 		res.setHeader('Access-Control-Allow-Origin', '*');
+			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+			res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+			res.setHeader('Access-Control-Allow-Credentials', true);
+			res.setHeader('Content-Type', 'application/json');
+	    	res.send(result);
+	 	});	
+	})
+	.get('/watched/movie-title/:flight_number', function(req, res, next) {
+		var parseData = url.parse(req.url, true);
+	 	moviesModel.watched_per_title(parseData.query, function(err, result){
 
 	 		res.setHeader('Access-Control-Allow-Origin', '*');
 			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

@@ -54,7 +54,7 @@ var jobs = {
         });
             
     },
-    watched: function(parameters, callback) {
+    watched_per_flight: function(parameters, callback) {
         sessionModel.validate_session_identifier(parameters, function(err, result){
             if(result.result === 'OK')
             {
@@ -62,13 +62,43 @@ var jobs = {
                     .seqObj
                     .user_activity_logs_table
                     .findAll({
-                        attributes: stables.user_activity_logs.fields,
-                        //group: 'ApplicantNumber',
+                        attributes: [[global.fn('COUNT',global.col('user_activity_logs.id')),'total_records'],'flight_number'],
+                        group: 'user_activity_logs.flight_number',
                         raw: true,
                         include: [
                             {
                                 model: global.seqObj.movies_table,
-                                attributes: ['title','cast'],
+                                attributes: [],
+                                nested: false
+                            }
+                        ]
+                    })
+                    .then(userActivityLogInformation=>{
+                        callback(null, userActivityLogInformation);
+                    });
+            }
+            else
+            {
+                callback(null, result);
+            }
+        });
+            
+    },
+    watched_per_title: function(parameters, callback) {
+        sessionModel.validate_session_identifier(parameters, function(err, result){
+            if(result.result === 'OK')
+            {
+                global
+                    .seqObj
+                    .movies_table
+                    .findAll({
+                        attributes: [[global.fn('COUNT',global.col('movies.id')),'total_records'],'title'],
+                        group: 'movies.title',
+                        raw: true,
+                        include: [
+                            {
+                                model: global.seqObj.user_activity_logs_table,
+                                attributes: [],
                                 nested: false
                             }
                         ]
@@ -94,6 +124,7 @@ exports_setup = {
                     //'application': jobs.application,
                     //'job_details': jobs.details
                     /*** EXTRA METHDOS ***/
-                    'watched': jobs.watched,
+                    'watched_per_flight': jobs.watched_per_flight,
+                    'watched_per_title': jobs.watched_per_title
                 };
 module.exports = exports_setup;
