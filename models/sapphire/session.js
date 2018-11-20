@@ -80,6 +80,23 @@ var session_manager = {
                 });
             
     },
+    update_last_accessed: function(parameters, callback) {
+            var params = parameters;
+            params.date_accessed = moment().format('YYYY-MM-DD hh:mm:ss');
+            global
+                .seqObj
+                .session_holders_table
+                .update({'date_time_last_accessed': params.date_accessed}, {where: {'session_identifier': parameters.session_identifier}})
+                .then(updateSession=>{
+            
+                    var result = {
+                                    'result': 'OK',
+                                    'details': updateSession
+                                };
+                    callback(null, result);   
+                });
+            
+    },
     login: function(parameters, callback) {
             var params = parameters;
             params.date_accessed = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -198,6 +215,43 @@ var session_manager = {
                     callback(null, validate_result);
                 });
     },
+    validate_session_identifier: function(parameters, callback) {
+        var session_time_span = moment().subtract(30, 'minutes');
+        session_time_span = moment(session_time_span).format('YYYY-MM-DD hh:mm:ss');
+        global
+                .seqObj
+                .session_holders_table
+                .findAll({
+                    attributes: ['user_name', 'session_identifier', ['updatedAt', 'last_accessed']],
+                    //group: 'ApplicantNumber',
+                    raw: true,
+                    where: {
+                        'session_identifier': parameters.session_identifier,
+                        'updatedAt': {
+                            [global.Op.gte]: session_time_span
+                        }
+                        
+                    }
+                })
+                .then(validateSession=>{
+                    var validate_result;
+                    var total_difference = moment().format('YYYY-MM-DD hh:mm:ss');
+                    total_difference = moment(total_difference);
+                    if(Object.keys(validateSession).length>0)
+                    {   
+                        session_manager.update_last_accessed(parameters, function(err, last_accessed){
+                            validate_result = {'result': 'OK', 'details': total_difference.diff(validateSession[0].last_accessed, 'minutes')};
+                            callback(null, validate_result);
+                        });
+                        
+                    }
+                    else
+                    {
+                       validate_result = {'result': 'ERROR', 'details': 'INVALID SESSION'};
+                       callback(null, validate_result);
+                    }
+                });
+    },
     check_user_log: function(parameters, callback) {
         var session_time_span = moment().subtract(30, 'minutes');
         session_time_span = moment(session_time_span).format('YYYY-MM-DD hh:mm:ss');
@@ -250,7 +304,8 @@ exports_setup = {
                     //'application': jobs.application,
                     //'job_details': jobs.details
                     /*** EXTRA METHDOS ***/
-                    'login': session_manager.login
+                    'login': session_manager.login,
+                    'validate_session_identifier': session_manager.validate_session_identifier
 
                 };
 module.exports = exports_setup;
