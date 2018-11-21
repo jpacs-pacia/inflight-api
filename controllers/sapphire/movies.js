@@ -32,6 +32,7 @@ router
 	})
 	.get('/watched/movie-title/:flight_number', function(req, res, next) {
 		var parseData = url.parse(req.url, true);
+		parseData.query['flight_number'] = req.params.flight_number;
 	 	moviesModel.watched_per_title(parseData.query, function(err, result){
 
 	 		res.setHeader('Access-Control-Allow-Origin', '*');

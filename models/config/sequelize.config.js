@@ -114,8 +114,8 @@ sequelize
 	   
 
 	   /*** MOVIES TO USER LOGS ***/
-	   global.seqObj.user_activity_logs_table.belongsTo(global.seqObj.movies_table, {foreignKey:'transaction_type_id',constraints:false});
-	   global.seqObj.movies_table.hasMany(global.seqObj.user_activity_logs_table, {foreignKey:'id',constraints:false});
+	   global.seqObj.user_activity_logs_table.belongsTo(global.seqObj.movies_table, {foreignKey:'id',constraints:false});
+	   global.seqObj.movies_table.hasMany(global.seqObj.user_activity_logs_table, {foreignKey:'transaction_type_id',constraints:false});
 	    // global.seqObj.user_activity_logs_table.belongsTo()
 	    // global.seqObj.applicants_job_table.belongsTo(global.seqObj.applicants_table, {foreignKey: 'ApplicantNumber',constraints: false});
 	    // global.seqObj.applicants_table.belongsToMany(global.seqObj.applicants_job_table, {through: 'applicantjob', foreignKey: 'ApplicantNumber',timestamps: false})

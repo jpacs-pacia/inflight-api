@@ -88,6 +88,22 @@ var jobs = {
         sessionModel.validate_session_identifier(parameters, function(err, result){
             if(result.result === 'OK')
             {
+                var where_params = {};
+                if (parameters.flight_number === 'all')
+                {
+                    where_params = {
+                        'transaction_type_id': global.col('movies.id')
+                    };
+                } else {
+                    where_params = {
+                        'transaction_type_id': global.col('movies.id'),
+                        'flight_number': parameters.flight_number,
+                        'date_accessed': {
+                            [global.Op.gte]: parameters.date_start,
+                            [global.Op.lte]: parameters.date_end
+                        }
+                    };
+                }
                 global
                     .seqObj
                     .movies_table
@@ -99,12 +115,21 @@ var jobs = {
                             {
                                 model: global.seqObj.user_activity_logs_table,
                                 attributes: [],
-                                nested: false
+                                nested: false,
+                                where: where_params
                             }
                         ]
                     })
                     .then(userActivityLogInformation=>{
-                        callback(null, userActivityLogInformation);
+                        var jsondata = {
+                            'result': 'OK',
+                            'details': userActivityLogInformation,
+                            'filter': {
+                                'flight_number': parameters.flight_number,
+                                'date': 'all'
+                            }
+                        };
+                        callback(null, jsondata);
                     });
             }
             else
