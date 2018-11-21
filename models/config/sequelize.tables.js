@@ -5,6 +5,12 @@ var movies_table = {		'fields':
 								[['title', 'ASC']]
 };
 
+var musics_table = {		'fields': 
+								['title','album_id','genre','cover_image_id','music_song'],
+							'sort':
+								[['title', 'ASC']]
+};
+
 var user_activity_logs_table = {
 							'fields': 
 								['user_id','user_types','transaction_type_id','transaction_type_code','date_accessed','description', 'flight_number'],
@@ -22,6 +28,7 @@ var appusers_table =  {
 
 var tables = {
 				'movies': movies_table, 
+				'musics': musics_table,
 				'user_activity_logs': user_activity_logs_table, 
 				'appusers': appusers_table
 			};

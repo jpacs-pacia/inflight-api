@@ -31,21 +31,21 @@ var vsprintf = require("sprintf-js").vsprintf;
 
 var sessionModel = require(global.appConfiguration.app_sapphire_model_directory + '/session.js');
 
-var movies = {
+var musics = {
     read: function(parameters, callback) {
         sessionModel.validate_session_identifier(parameters, function(err, result){
             if(result.result === 'OK')
             {
                 global
                     .seqObj
-                    .movies_table
+                    .musics_table
                     .findAll({
-                        attributes: stables.movies.fields,
+                        attributes: stables.musics.fields,
                         //group: 'ApplicantNumber',
                         raw: true
                     })
-                    .then(moviesInformation=>{
-                        parameters.details = moviesInformation;
+                    .then(musicsInformation=>{
+                        parameters.details = musicsInformation;
                         returnResults.RETURN_OK(parameters, function(err, jsondata){
                             callback(null, jsondata);
                         });
@@ -53,10 +53,7 @@ var movies = {
             }
             else
             {
-                var jsondata = returnResults.RETURN_ERROR;
-                jsondata.details = result.details;
-                jsondata.notification = 'Invalid session identifier.';
-                callback(null, jsondata);
+                callback(null, result);
             }
         });
             
@@ -149,14 +146,14 @@ var movies = {
 };
 
 exports_setup = {
-                    //'create': movies.create,
-                    'read': movies.read,
+                    //'create': musics.create,
+                    'read': musics.read,
                     // 'update': update,
                     // 'delete': deletes,
-                    //'application': movies.application,
-                    //'job_details': movies.details
+                    //'application': musics.application,
+                    //'job_details': musics.details
                     /*** EXTRA METHDOS ***/
-                    'watched_per_flight': movies.watched_per_flight,
-                    'watched_per_title': movies.watched_per_title
+                    'watched_per_flight': musics.watched_per_flight,
+                    'watched_per_title': musics.watched_per_title
                 };
 module.exports = exports_setup;
