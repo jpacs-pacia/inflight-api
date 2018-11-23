@@ -133,7 +133,8 @@ var movies = {
                             'details': userActivityLogInformation,
                             'filter': {
                                 'flight_number': parameters.flight_number,
-                                'date': 'all'
+                                'date': 'all',
+                                'transaction_type_code': 'MOVIES'
                             }
                         };
                         callback(null, jsondata);

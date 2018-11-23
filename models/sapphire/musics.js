@@ -96,12 +96,14 @@ var musics = {
                 if (parameters.flight_number === 'all')
                 {
                     where_params = {
-                        'transaction_type_id': global.col('movies.id')
+                        'transaction_type_id': global.col('musics.id'),
+                        'transaction_type_code': 'MUSIC'
                     };
                 } else {
                     where_params = {
-                        'transaction_type_id': global.col('movies.id'),
+                        'transaction_type_id': global.col('musics.id'),
                         'flight_number': parameters.flight_number,
+                        'transaction_type_code': 'MUSIC',
                         'date_accessed': {
                             [global.Op.gte]: parameters.date_start,
                             [global.Op.lte]: parameters.date_end
@@ -110,10 +112,10 @@ var musics = {
                 }
                 global
                     .seqObj
-                    .movies_table
+                    .musics_table
                     .findAll({
-                        attributes: [[global.fn('COUNT',global.col('movies.id')),'total_records'],'title'],
-                        group: 'movies.title',
+                        attributes: [[global.fn('COUNT',global.col('musics.id')),'total_records'],'title'],
+                        group: 'musics.title',
                         raw: true,
                         include: [
                             {
@@ -130,7 +132,8 @@ var musics = {
                             'details': userActivityLogInformation,
                             'filter': {
                                 'flight_number': parameters.flight_number,
-                                'date': 'all'
+                                'date': 'all',
+                                'transaction_type_code': 'MUSIC'
                             }
                         };
                         callback(null, jsondata);

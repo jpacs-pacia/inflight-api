@@ -18,7 +18,7 @@ router
 	    	res.send(result);
 	 	});	
 	})
-	.get('/watched/flight/:flight_number', function(req, res, next) {
+	.get('/played/flight/:flight_number', function(req, res, next) {
 		var parseData = url.parse(req.url, true);
 	 	musicsModel.watched_per_flight(parseData.query, function(err, result){
 
@@ -30,7 +30,7 @@ router
 	    	res.send(result);
 	 	});	
 	})
-	.get('/watched/movie-title/:flight_number', function(req, res, next) {
+	.get('/played/music-title/:flight_number', function(req, res, next) {
 		var parseData = url.parse(req.url, true);
 		parseData.query['flight_number'] = req.params.flight_number;
 	 	musicsModel.watched_per_title(parseData.query, function(err, result){

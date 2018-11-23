@@ -120,6 +120,20 @@ sequelize
 	    	{timestamps: false}
 	    );
 
+	     /*** SAPPHIRE USER - ORDERS  ***/
+	    global.seqObj.orders_table = sequelize.define('orders', 
+	    	{		
+	    		'userId': {type:Sequelize.INTEGER},
+	    		'productId': {type: Sequelize.STRING},
+	            'quantity': {type:Sequelize.INTEGER},
+	            'orderDate': {type:Sequelize.DATE},
+	            'paymentMethod': {type:Sequelize.STRING},
+	            'orderStatus': {type:Sequelize.STRING}
+	    	}, 
+	    	{freezeTableName: true},
+	    	{timestamps: false}
+	    );
+
 	    /*** TABLE JOINS ***/
 
 	    /*** ACCOUNTS TO USER LOGS ***/
