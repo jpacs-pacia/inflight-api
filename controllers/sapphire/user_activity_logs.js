@@ -26,6 +26,7 @@ router
 
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     obj.url_link = fullUrl;
+    console.log(obj);
 	userActivityLogModel.create(obj, function(err, result){
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

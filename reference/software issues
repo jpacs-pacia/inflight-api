@@ -1,0 +1,7 @@
+Workbench Issues
+
+Linux   ~/.mysql/workbench/
+
+deleted the wb_options.xml and wb_state.xml files and restarted Workbench 
+
+

@@ -53,7 +53,7 @@ var activity_logs = {
                 .user_activity_logs_table
                 .create(params)
                 .then(createWorkExperience=>{
-            
+                    console.log(createWorkExperience);
                     var result = {
                                     'result': 'OK',
                                     'details': createWorkExperience
