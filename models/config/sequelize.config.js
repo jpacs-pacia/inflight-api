@@ -5,7 +5,7 @@ global.seqObj = {'status': 'PENDING'};
 
 var Sequelize = require('sequelize');
 // l0c4lh0st
-var sequelize = new Sequelize('inflightapp', 'root', 'laussales', {
+var sequelize = new Sequelize('inflightapp', 'root', '', {
   dialect: 'mysql',
   host: '127.0.0.1',
   port: '3306',

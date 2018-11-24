@@ -175,6 +175,15 @@ var session_manager = {
                         
                         
                     }   
+                    else 
+                    {
+                            result = {
+                            'result': 'ERROR',
+                            'details':'INVALID_CREDENTIALS',
+                            'session_identifier': 'NONE'
+                        };
+                        callback(null, result);
+                    }
 
                     
                     
